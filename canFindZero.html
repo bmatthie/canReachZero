@@ -1,0 +1,85 @@
+/** canReachZero
+ * 
+ *  Given an array and a starting index, determine whether it's possible to reach an
+ *  index whose value is 0 by starting at index and repeatedly jumping either left or right the
+ *  distance found at array[index]. Return true if it is possible to reach 0, false otherwise.
+ *  Example: console.log(canFindZero([2, 4, 1, 0, 5], 0)); // => should print true
+ */
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Can Find Zero</h2>
+
+<script>
+var lenA;
+var visited = [];
+
+function canFindZero(array, index) {
+	console.log("=================================");
+    console.log("Array:  [" + array +"]");
+    
+    /*  Solution possible only if array contains a 0.
+    */	
+    lenA = array.length;
+    var hasZero = false;
+	for (i = 0; i < lenA; i++) {
+    	if (array[i] == 0) {hasZero = true}
+    };
+       
+	if (!hasZero) {
+    	console.log("Failure. No zero in array.");
+        return(false);
+    } else {
+   		
+        /* Visited is global. Used in recusion to detect cycle. 
+        */
+        for (i = 0; i < lenA; i++) {visited[i] = false};
+    
+        var direction = "Start at index ";
+        var tab = "";
+        return(cFZ(direction, tab, array, index));
+    }
+}
+
+function cFZ(direction, tab, A, i) {
+
+    console.log(direction + i);
+    tab += "    ";
+ 
+    
+    /* If value of element is zero then solution has been found.
+    */
+    if (A[i] == 0) {
+    	console.log(tab + "Success. Zero found.");
+        return(true);
+    }
+    
+    /* Return FALSE (no solution) if 'cycle' has returned you back
+       to a past index you are caught in a loop.
+    */
+    if ((visited[i])) {
+    	console.log(tab + "Failure. In a loop - element visited.");
+        return(false);
+    } else { 
+    	visited[i] = true;
+    }
+
+	/* Otherwise, shift Right or Left and try again.
+    */
+    var newIndexRight = (i + A[i]) % lenA;
+    if ((i - (A[i] % lenA)) >= 0) {
+    	newIndexLeft = i - (A[i] % lenA);
+    } else {
+    	var newIndexLeft = lenA - (A[i] % lenA) + i;
+    }
+       
+    return(cFZ(tab + "From index " + i + ", right " + A[i] + " to index ", tab, A, newIndexRight) ||
+    	   cFZ(tab + "From index " + i + ", left " + A[i] + " to index ", tab, A, newIndexLeft));
+}
+
+console.log(canFindZero([1, 2, 1, 2, 1], 1)); 
+</script>
+
+</body>
+</html> 
